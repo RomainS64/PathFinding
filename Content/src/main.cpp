@@ -10,8 +10,8 @@
 
 #include "Scene.h"
 #include "Square.h"
-#include "AStarBoard.h"
-#include "AStar.h"
+#include "../../Build/App/AStarBoard.h"
+#include "AStar
 
 int main() {
     sf::RenderWindow window(sf::VideoMode(1920/2,1080/2), "YOO");

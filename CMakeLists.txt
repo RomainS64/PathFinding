@@ -3,5 +3,7 @@ project(PathFinding)
 
 set (MY_LIB_HEADER ${CMAKE_CURRENT_SOURCE_DIR}/MyLib/include)
 
+add_subdirectory(PathFindingAStar)
 add_subdirectory(CoreEngine)
+add_subdirectory(Content)
 add_subdirectory(App)

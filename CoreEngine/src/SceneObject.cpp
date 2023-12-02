@@ -1,8 +1,7 @@
 #include "SceneObject.h"
 #include <iostream>
 
-SceneObject::SceneObject(sf::RenderWindow* renderWindows):_renderWindows(renderWindows)
-{}
+SceneObject::SceneObject(sf::RenderWindow* renderWindows, sf::Vector2f position):_renderWindows(renderWindows),_position(position){}
 
 void SceneObject::Start()
 {

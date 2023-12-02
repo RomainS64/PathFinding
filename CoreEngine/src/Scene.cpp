@@ -23,10 +23,12 @@ void Scene::Update()
 
 void Scene::Draw()
 {
+	_renderWindows->clear();
 	for (SceneObject* sceneObject : _sceneObjects)
 	{
 		sceneObject->Draw();
 	}
+	_renderWindows->display();
 }
 
 Scene::~Scene()
