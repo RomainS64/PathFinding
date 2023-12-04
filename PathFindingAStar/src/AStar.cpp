@@ -1,6 +1,6 @@
 #include "AStar.h"
 
-AStar::AStar(Graph graph) : graph(graph) {}
+AStar::AStar(Graph& graph) : graph(graph) {}
 
 std::vector<Node*> AStar::findPath(Node* start, Node* goal) {
     std::priority_queue<std::pair<double, Node*>, std::vector<std::pair<double, Node*>>, std::greater<>> openSet;
@@ -46,7 +46,10 @@ std::vector<Node*> AStar::findPath(Node* start, Node* goal) {
 }
 
 double AStar::heuristicCost(Node* a, Node* b) {
-    return 0.0;
+    //distance euclidienne 
+    double dx = a->position.x - b->position.x;
+    double dy = a->position.y - b->position.y;
+    return std::sqrt(dx * dx + dy * dy);
 }
 
 double AStar::getGScore(Node* node) {

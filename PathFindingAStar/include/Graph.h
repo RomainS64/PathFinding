@@ -3,10 +3,11 @@
 #include <vector>
 #include <SFML/System/Vector2.hpp>
 
-class Node {
-public:
-    int id;  // Un identifiant unique pour chaque n�ud
-    Node(int nodeId):id(nodeId){};
+struct Node {
+    int id;
+    sf::Vector2i position;
+    
+    Node(int nodeId,sf::Vector2i nodePosition):id(nodeId),position(nodePosition){};
 };
 
 class Graph {

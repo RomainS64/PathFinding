@@ -25,14 +25,34 @@ int main() {
     
     scene->Start();
     board->SetCellType(sf::Vector2i(0,0),Start);
-    board->SetCellType(sf::Vector2i(15,8),End);
+    
+    board->SetCellType(sf::Vector2i(1,0),Wall);
+    board->SetCellType(sf::Vector2i(1,1),Wall);
+    board->SetCellType(sf::Vector2i(1,2),Wall);
+    board->SetCellType(sf::Vector2i(1,3),Wall);
 
+    board->SetCellType(sf::Vector2i(3,8),Wall);
+    board->SetCellType(sf::Vector2i(3,7),Wall);
+    board->SetCellType(sf::Vector2i(3,6),Wall);
+    board->SetCellType(sf::Vector2i(3,5),Wall);
+    board->SetCellType(sf::Vector2i(3,4),Wall);
+    board->SetCellType(sf::Vector2i(4,7),Wall);
+    board->SetCellType(sf::Vector2i(5,7),Wall);
+    board->SetCellType(sf::Vector2i(6,7),Wall);
+    board->SetCellType(sf::Vector2i(7,7),Wall);
+    board->SetCellType(sf::Vector2i(8,7),Wall);
+    board->SetCellType(sf::Vector2i(9,7),Wall);
+    board->CreatePortal(sf::Vector2i(8,5),sf::Vector2i(5,8));
+    board->SetCellType(sf::Vector2i(8,8),End);
     board->ValidateCells();
+    
     AStar* astar = new AStar(*board);
     std::vector<Node*> path = astar->findPath(board->startNode,board->endNode);
+    std::cout << board->startNode->id<<">>>>>"<< board->endNode->id<<std::endl ;
     if (!path.empty()) {
         std::cout << "Chemin trouvé : ";
         for (Node* node : path) {
+            if(node != board->startNode && node != board->endNode)board->SetCellType(node,Path);
             std::cout << node->id << " ";
         }
         std::cout << std::endl;

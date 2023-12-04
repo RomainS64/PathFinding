@@ -1,5 +1,7 @@
 ﻿#include "AStarBoard.h"
 
+#include <iostream>
+
 AStarBoard::AStarBoard(sf::RenderWindow* renderWindows,sf::Vector2f position,sf::Vector2i size):
 SceneObject(renderWindows,position),_size(size)
 {
@@ -17,12 +19,12 @@ SceneObject(renderWindows,position),_size(size)
                 renderWindows,0.04f,
                 sf::Vector2f(_position.x+(x*0.05f),_position.y+(y*0.05f)),
                 sf::Color::White);
-            Node* node = new Node(x+10*y);
-            BoardCell cell;
-            cell.cellType = Empty;
-            cell.square = square;
-            cell.positionInBoard = sf::Vector2i(x,y);
+            Node* node = new Node(x+100*y,sf::Vector2i(x,y));
+            BoardCell* cell = new BoardCell;
+            cell->cellType = Empty;
+            cell->square = square;
             _cells[node] = cell;
+            
         }
     }
 }
@@ -31,7 +33,11 @@ AStarBoard::~AStarBoard()
 {
     for(const auto cell : _cells)
     {
-        delete cell.second.square;
+        delete cell.second;
+    }
+    for(const auto portal : _portals)
+    {
+        delete portal;
     }
 }
 
@@ -39,15 +45,17 @@ void AStarBoard::Start()
 {
     for(const auto cell : _cells)
     {
-         cell.second.square->Start();
+         cell.second->square->Start();
+        UpdateCell(cell);
     }
+    
 }
 
 void AStarBoard::Update()
 {
     for(const auto cell : _cells)
     {
-        cell.second.square->Update();
+        cell.second->square->Update();
     }
 }
 
@@ -55,47 +63,74 @@ void AStarBoard::Draw()
 {
     for(const auto cell : _cells)
     {
-        cell.second.square->Draw();
+        cell.second->square->Draw();
     }
 }
-
-void AStarBoard::SetCellType(sf::Vector2i position, CellType type)
+void AStarBoard::UpdateCell(std::pair<Node*, BoardCell*> cell)
 {
-    std::pair<Node*, BoardCell> cell = GetCell(position);
-    cell.second.cellType = type;
+    CellType type = cell.second->cellType;
     switch(type) {
     case Empty:
-        cell.second.square->SetColor(sf::Color(100,100,100));
+        cell.second->square->SetColor(sf::Color(100,100,100));
         break;
     case Wall:
-        cell.second.square->SetColor(sf::Color::White);
+        cell.second->square->SetColor(sf::Color::White);
         break;
     case Portal:
-        cell.second.square->SetColor(sf::Color::Green);
+        cell.second->square->SetColor(sf::Color::Green);
+        break;
+    case Path:
+        cell.second->square->SetColor(sf::Color::Yellow);
         break;
     case CellType::Start:
-        cell.second.square->SetColor(sf::Color::Blue);
+        cell.second->square->SetColor(sf::Color::Blue);
         startNode = cell.first;
         break;
     case End:
-        cell.second.square->SetColor(sf::Color::Red);
+        cell.second->square->SetColor(sf::Color::Red);
         endNode = cell.first;
         break;
     default:
         ;
     }
 }
+void AStarBoard::SetCellType(sf::Vector2i position, CellType type)
+{
+    std::pair<Node*, BoardCell*> cell = GetCell(position);
+    cell.second->cellType = type;
+    UpdateCell(cell);
+    
+}
 
-std::pair<Node*, BoardCell> AStarBoard::GetCell(sf::Vector2i position)
+void AStarBoard::CreatePortal(sf::Vector2i entry, sf::Vector2i exit)
+{
+    auto entryCell =GetCell(entry);
+    auto exitCell = GetCell(exit);
+    Portals* portals = new Portals(entryCell.second,exitCell.second);
+    portals->entry->cellType = Portal;
+    portals->exit->cellType = Portal;
+    UpdateCell(entryCell);
+    UpdateCell(exitCell);
+    _portals.push_back(portals);
+}
+
+void AStarBoard::SetCellType(Node* node, CellType type)
+{
+    _cells[node]->cellType = type;
+    UpdateCell(*_cells.find(node));
+}
+
+std::pair<Node*, BoardCell*> AStarBoard::GetCell(sf::Vector2i position)
 {
     for(auto cell : _cells)
     {
-        if(cell.second.positionInBoard == position)
+        if(cell.first->position == position)
         {
             return cell;
         }
     }
-    return  std::pair<Node*, BoardCell>(_cells.begin()->first,_cells.begin()->second);
+    std::cout<< "No cell founded at position"<<position.x<<";"<<position.y<<std::endl;
+    return *_cells.begin();
 }
 
 void AStarBoard::ValidateCells()
@@ -106,24 +141,41 @@ void AStarBoard::ValidateCells()
     }
     for (int x = 0; x < _size.x; x++) {
         for (int y = 0; y < _size.y; y++) {
-            std::pair<Node*, BoardCell> cell = GetCell(sf::Vector2i(x,y));
-            if(cell.second.cellType == Wall)return;
-            int id = x + (10 * y);
+            std::pair<Node*, BoardCell*> cell = GetCell(sf::Vector2i(x,y));
+            if(cell.second->cellType == Wall)continue;
             if (x !=0) {
-                std::pair<Node*, BoardCell> linkedCell = GetCell(sf::Vector2i(x-1,y));
-                addEdge(cell.first,linkedCell.first);
+                
+                std::pair<Node*, BoardCell*> linkedCell = GetCell(sf::Vector2i(x-1,y));
+                if(linkedCell.second->cellType != Wall)
+                {
+                    addEdge(cell.first,linkedCell.first);
+                }
+                
             }
             if (x != _size.x-1) {
-                std::pair<Node*, BoardCell> linkedCell = GetCell(sf::Vector2i(x+1,y));
-                addEdge(cell.first,linkedCell.first);
+                std::pair<Node*, BoardCell*> linkedCell = GetCell(sf::Vector2i(x+1,y));
+                if(linkedCell.second->cellType != Wall)
+                {
+                    std::cout<<"link to the right"<< cell.first->id << ">"<< linkedCell.first->id<< std::endl;
+                    addEdge(cell.first,linkedCell.first);
+                }
+                
             }
             if (y != 0) {
-                std::pair<Node*, BoardCell> linkedCell = GetCell(sf::Vector2i(x,y-1));
-                addEdge(cell.first,linkedCell.first);
+                std::pair<Node*, BoardCell*> linkedCell = GetCell(sf::Vector2i(x,y-1));
+                if(linkedCell.second->cellType != Wall)
+                {
+                    addEdge(cell.first,linkedCell.first);
+                }
+                
             }
             if (y != _size.y-1) {
-                std::pair<Node*, BoardCell> linkedCell = GetCell(sf::Vector2i(x,y+1));
-                addEdge(cell.first,linkedCell.first);
+                std::pair<Node*, BoardCell*> linkedCell = GetCell(sf::Vector2i(x,y+1));
+                if(linkedCell.second->cellType != Wall)
+                {
+                    addEdge(cell.first,linkedCell.first);
+                }
+                
             }
         }
     }

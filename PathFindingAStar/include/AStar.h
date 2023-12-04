@@ -9,11 +9,11 @@
 
 class AStar {
 public:
-    AStar(Graph graph);
+    AStar(Graph& graph);
     std::vector<Node*> findPath(Node* start, Node* goal);
 
 private:
-    Graph graph;
+    Graph& graph;
     std::unordered_map<Node*, Node*> cameFrom;
     std::unordered_map<Node*, double> gScore;
     std::unordered_map<Node*, double> fScore;
