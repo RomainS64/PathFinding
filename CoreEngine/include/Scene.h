@@ -7,6 +7,7 @@ class Scene
 {
 public:
 	Scene(sf::RenderWindow* renderWindows, std::list<SceneObject*> sceneObjects);
+
 	void Start();
 	void Update();
 	void Draw();
