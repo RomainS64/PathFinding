@@ -20,9 +20,9 @@ struct BoardCell
 };
 struct Portals
 {
-    Portals( BoardCell* first,BoardCell* second):entry(first),exit(second){}
-    BoardCell* entry;
-    BoardCell* exit;
+    Portals( Node* first,Node* second):entry(first),exit(second){}
+    Node* entry;
+    Node* exit;
 };
 class AStarBoard : public Graph,public SceneObject
 {

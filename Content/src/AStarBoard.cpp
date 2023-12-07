@@ -106,9 +106,9 @@ void AStarBoard::CreatePortal(sf::Vector2i entry, sf::Vector2i exit)
 {
     auto entryCell =GetCell(entry);
     auto exitCell = GetCell(exit);
-    Portals* portals = new Portals(entryCell.second,exitCell.second);
-    portals->entry->cellType = Portal;
-    portals->exit->cellType = Portal;
+    Portals* portals = new Portals(entryCell.first,exitCell.first);
+    entryCell.second->cellType = Portal;
+    exitCell.second->cellType= Portal;
     UpdateCell(entryCell);
     UpdateCell(exitCell);
     _portals.push_back(portals);
@@ -138,6 +138,10 @@ void AStarBoard::ValidateCells()
     for(auto cell : _cells)
     {
         addNode(cell.first);
+    }
+    for(auto portal : _portals)
+    {
+        addEdge(portal->entry,portal->exit);
     }
     for (int x = 0; x < _size.x; x++) {
         for (int y = 0; y < _size.y; y++) {
