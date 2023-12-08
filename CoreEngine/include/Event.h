@@ -15,21 +15,24 @@ public:
 	EventID _id;
 };
 
-class Observer
+class EventSubscriber
 {
 public:
 	virtual void update(const EventBase* _eventB) = 0;
 };
 
-class Subject
+class EventPublisher
 {
 public:
-	virtual void attach(const EventID& _ID, Observer* observer);
-	virtual void detach(const EventID& _ID, Observer* observer);
+	EventPublisher() {};
+	virtual ~EventPublisher() {};
+
+	virtual void attach(const EventID& _ID, EventSubscriber* subscriber);
+	virtual void detach(const EventID& _ID, EventSubscriber* subscriber);
 	virtual void notify(const EventID& _ID);
 
 protected:
-	std::unordered_map< EventID, std::vector<Observer*> > m_hashObserver;
+	std::unordered_map< EventID, std::vector<EventSubscriber*> > m_hashSubscribers;
 };
 
 

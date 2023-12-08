@@ -8,16 +8,16 @@ set (HEADERS
     ${HEADER_DIR}/Scene.h
     ${HEADER_DIR}/SceneObject.h
     ${HEADER_DIR}/Square.h
-	${HEADER_DIR}/Observer.h
-    ${HEADER_DIR}/GameState.h
+	${HEADER_DIR}/Event.h
+    ${HEADER_DIR}/InputSystem.h
 )
 
 set (SOURCES
     ${SOURCE_DIR}/Scene.cpp
     ${SOURCE_DIR}/SceneObject.cpp
     ${SOURCE_DIR}/Square.cpp
-	${SOURCE_DIR}/Observer.cpp
-    ${SOURCE_DIR}/GameState.cpp
+	${SOURCE_DIR}/Event.cpp
+    ${SOURCE_DIR}/InputSystem.cpp
 )
 
 add_library(${PROJECT_NAME}
