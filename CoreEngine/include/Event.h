@@ -18,7 +18,9 @@ public:
 class EventSubscriber
 {
 public:
-	virtual void update(const EventBase* _eventB) = 0;
+	EventSubscriber() {};
+	virtual ~EventSubscriber() {};
+	virtual void onNotify(const EventID& _ID) = 0;
 };
 
 class EventPublisher

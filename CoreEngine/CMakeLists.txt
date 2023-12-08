@@ -10,6 +10,7 @@ set (HEADERS
     ${HEADER_DIR}/Square.h
 	${HEADER_DIR}/Event.h
     ${HEADER_DIR}/InputSystem.h
+	${HEADER_DIR}/Button.h
 )
 
 set (SOURCES
@@ -18,6 +19,7 @@ set (SOURCES
     ${SOURCE_DIR}/Square.cpp
 	${SOURCE_DIR}/Event.cpp
     ${SOURCE_DIR}/InputSystem.cpp
+	 ${SOURCE_DIR}/Button.cpp
 )
 
 add_library(${PROJECT_NAME}
