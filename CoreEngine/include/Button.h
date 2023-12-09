@@ -6,7 +6,7 @@
 class Button : public SceneObject, public EventSubscriber
 {
 public:
-	Button(sf::RenderWindow* renderWindows, sf::Vector2f position, sf::Vector2f size, sf::Text text);
+	Button(sf::RenderWindow* renderWindows, sf::Vector2f position, sf::Vector2f size, sf::Text text,sf::Color buttonColor,sf::Color textColor);
 	~Button();
 
 	virtual void Start() override;

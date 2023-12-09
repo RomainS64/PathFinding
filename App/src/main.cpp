@@ -90,29 +90,20 @@ int main()
 	window.setFramerateLimit(60);
 
 	sf::Font* font = new sf::Font();
-	std::string fontPath = "C:/Windows/Fonts/Calibri.ttf";
-
-	// Vérifie si le fichier de la police existe avant de tenter de charger la police
-	if (!std::filesystem::exists(fontPath))
-		std::cout << "Le fichier de la police n'existe pas : " << fontPath << std::endl;
-	if (!font->loadFromFile(fontPath))
-	{
-		std::cout << "Error loading font\n";
-	}
 
 	// Button stuff
-	Button* startButton = new Button(&window, sf::Vector2f(0.1f, 0.1f), sf::Vector2f(150.f, 50.f), sf::Text("Start", *font));
-	startButton->SetButtonColor(sf::Color::Red);
-	startButton->SetTextColor(sf::Color::White);
-	startButton->SetButtonOutlineColor(sf::Color::Black);
-	startButton->SetButtonOutlineThickness(2.f);
-	startButton->subscribe([]() {std::cout << "Start button Click" << std::endl; });
+	Button* startButton = new Button(&window, sf::Vector2f(0, 0), sf::Vector2f(0.2f, 0.07f), sf::Text("Start", *font),sf::Color::Green,sf::Color::White);
+	Button* nextButton = new Button(&window, sf::Vector2f(0.2f, 0), sf::Vector2f(0.2f, 0.07f), sf::Text("Start", *font),sf::Color::Blue,sf::Color::White);
+	Button* previousButton = new Button(&window, sf::Vector2f(0.4f, 0), sf::Vector2f(0.2f, 0.07f), sf::Text("Start", *font),sf::Color::Blue,sf::Color::White);
+	Button* restartButton = new Button(&window, sf::Vector2f(0.6f, 0), sf::Vector2f(0.2f, 0.07f), sf::Text("Start", *font),sf::Color::Red,sf::Color::White);
 	
 	AStarBoard* board = new AStarBoard(&window, sf::Vector2f(0.1f, 0.1f), sf::Vector2i(16, 9), 0.8f);
-	
 	std::list<SceneObject*> sceneObjects;
 
 	sceneObjects.push_back(startButton);
+	sceneObjects.push_back(nextButton);
+	sceneObjects.push_back(previousButton);
+	sceneObjects.push_back(restartButton);
 	sceneObjects.push_back(board);
 	Scene* scene = new Scene(&window, sceneObjects);
 
@@ -120,52 +111,57 @@ int main()
 	std::vector<Node*> path;
 	bool isPathfindingDone = false;
 	bool isFullyDisplayed = false;
-
 	
-
 	SetupProject(board, scene);
 
 	InputSystem* inputSystem = new InputSystem(&window, scene);
 	inputSystem->attach("LeftClick", startButton);
+	inputSystem->attach("LeftClick", nextButton);
+	inputSystem->attach("LeftClick", previousButton);
+	inputSystem->attach("LeftClick", restartButton);
+	startButton->subscribe([&isPathfindingDone,&board,&path]()
+	{
+		if (!isPathfindingDone)
+		{
+			path = CalculatePath(board);
+			isPathfindingDone = true;
+		}
+	});
+	previousButton->subscribe([&isPathfindingDone,&board,&path,&isFullyDisplayed,&currentCellToDisplay]()
+		{
+			if (isPathfindingDone & currentCellToDisplay >0)
+			{
+				currentCellToDisplay--;
+				isFullyDisplayed = DisplayPath(board, path, currentCellToDisplay);
+			}
+		});
+	nextButton->subscribe([&isPathfindingDone,&board,&path,&isFullyDisplayed,&currentCellToDisplay]()
+		{
+			if (isPathfindingDone & !isFullyDisplayed)
+			{
+				isFullyDisplayed = DisplayPath(board, path, currentCellToDisplay);
+				currentCellToDisplay++;
+			}
+		});
+	restartButton->subscribe([&]()
+		{
+				delete scene;
+				board = new AStarBoard(&window, sf::Vector2f(0.1f, 0.1f), sf::Vector2i(16, 9), 0.8f);
+				std::list<SceneObject*> sceneObjects;
+				sceneObjects.push_back(board);
+				scene = new Scene(&window, sceneObjects);
 
+				currentCellToDisplay = 0;
+				isPathfindingDone = false;
+				isFullyDisplayed = false;
+				SetupProject(board, scene);
+		});
 	//Scene stuff
 
 	bool spacePressed = false;
 
 	while (window.isOpen())
 	{
-		/*sf::Event event;
-		while (window.pollEvent(event)) {
-			if (event.type == sf::Event::Closed)window.close();
-			// Check if the space bar is pressed
-			if (event.type == sf::Event::KeyReleased && event.key.code == sf::Keyboard::Space)spacePressed = false;
-			if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Space && !spacePressed) {
-				spacePressed = true;
-				if (!isPathfindingDone)
-				{
-					path = CalculatePath(board);
-					isPathfindingDone = true;
-				}
-				else if (!isFullyDisplayed)
-				{
-					isFullyDisplayed = DisplayPath(board, path, currentCellToDisplay);
-					currentCellToDisplay++;
-				}
-				else
-				{
-					delete scene;
-					board = new AStarBoard(&window, sf::Vector2f(0.1f, 0.1f), sf::Vector2i(16, 9), 0.8f);
-					std::list<SceneObject*> sceneObjects;
-					sceneObjects.push_back(board);
-					scene = new Scene(&window, sceneObjects);
-
-					currentCellToDisplay = 0;
-					isPathfindingDone = false;
-					isFullyDisplayed = false;
-					SetupProject(board, scene);
-				}
-			}
-		}*/
 		inputSystem->Update();
 		scene->Update();
 		scene->Draw();

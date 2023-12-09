@@ -1,17 +1,20 @@
 #include "Button.h"
 #include "InputSystem.h"
 
-Button::Button(sf::RenderWindow* renderWindows, sf::Vector2f position, sf::Vector2f size, sf::Text text) : SceneObject(renderWindows, position), _size(size), _text(text)
+Button::Button(sf::RenderWindow* renderWindows, sf::Vector2f position, sf::Vector2f size, sf::Text text,sf::Color buttonColor,sf::Color textColor) : SceneObject(renderWindows, position), _size(size), _text(text)
 {
-	_button = sf::RectangleShape(_size);
-	_button.setPosition(_position);
-	_button.setFillColor(sf::Color::White);
-	_button.setOutlineColor(sf::Color::Black);
+	sf::Vector2u windowsSize = _renderWindows->getSize();
+	
+	
+	_button = sf::RectangleShape(sf::Vector2f(size.x*windowsSize.x,size.y*windowsSize.x));
+	_button.setPosition(sf::Vector2f(_position.x*windowsSize.x,_position.y*windowsSize.x));
+	_button.setFillColor(buttonColor);
+	_button.setOutlineColor(buttonColor);
 	_button.setOutlineThickness(1.f);
 
-	_text.setPosition(_position.x + 10.0f, _position.y + 5.0f);
+	_text.setPosition(_position.x*windowsSize.x + 10.0f, _position.y*windowsSize.x + 5.0f);
 	_text.setCharacterSize(20);
-	_text.setFillColor(sf::Color::Black);
+	_text.setFillColor(textColor);
 }
 
 Button::~Button()
