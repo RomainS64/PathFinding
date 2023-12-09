@@ -19,34 +19,35 @@
 
 void SetupProject(AStarBoard* board, Scene* scene)
 {
-	scene->Start();
-	board->SetCellType(sf::Vector2i(1, 0), Wall);
-	board->SetCellType(sf::Vector2i(1, 1), Wall);
-	board->SetCellType(sf::Vector2i(1, 2), Wall);
-	board->SetCellType(sf::Vector2i(1, 3), Wall);
-	board->SetCellType(sf::Vector2i(3, 8), Wall);
-	board->SetCellType(sf::Vector2i(3, 7), Wall);
-	board->SetCellType(sf::Vector2i(3, 6), Wall);
-	board->SetCellType(sf::Vector2i(3, 5), Wall);
-	board->SetCellType(sf::Vector2i(3, 4), Wall);
-	board->SetCellType(sf::Vector2i(4, 7), Wall);
-	board->SetCellType(sf::Vector2i(6, 7), Wall);
-	board->SetCellType(sf::Vector2i(7, 1), Wall);
-	board->SetCellType(sf::Vector2i(7, 2), Wall);
-	board->SetCellType(sf::Vector2i(7, 3), Wall);
-	board->SetCellType(sf::Vector2i(7, 4), Wall);
-	board->SetCellType(sf::Vector2i(7, 5), Wall);
-	board->SetCellType(sf::Vector2i(7, 6), Wall);
-	board->SetCellType(sf::Vector2i(7, 7), Wall);
-	board->SetCellType(sf::Vector2i(5, 7), Wall);
-	board->SetCellType(sf::Vector2i(7, 7), Wall);
-	board->SetCellType(sf::Vector2i(8, 7), Wall);
-	board->SetCellType(sf::Vector2i(9, 7), Wall);
-	board->SetCellType(sf::Vector2i(0, 0), Start);
-	board->SetCellType(sf::Vector2i(8, 8), End);
-	board->SetCellType(sf::Vector2i(12, 4), Checkpoint);
-	board->CreatePortal(sf::Vector2i(1, 7), sf::Vector2i(5, 8));
-	board->ValidateCells();
+    scene->Start();
+    board->SetCellType(sf::Vector2i(1,0),Wall);
+    board->SetCellType(sf::Vector2i(1,1),Wall);
+    board->SetCellType(sf::Vector2i(1,2),Wall);
+    board->SetCellType(sf::Vector2i(1,3),Wall);
+    board->SetCellType(sf::Vector2i(3,8),Wall);
+    board->SetCellType(sf::Vector2i(3,7),Wall);
+    board->SetCellType(sf::Vector2i(3,6),Wall);
+    board->SetCellType(sf::Vector2i(3,5),Wall);
+    board->SetCellType(sf::Vector2i(3,4),Wall);
+    board->SetCellType(sf::Vector2i(4,7),Wall);
+    board->SetCellType(sf::Vector2i(6,7),Wall);
+    board->SetCellType(sf::Vector2i(7,1),Wall);
+    board->SetCellType(sf::Vector2i(7,2),Wall);
+    board->SetCellType(sf::Vector2i(7,3),Wall);
+    board->SetCellType(sf::Vector2i(7,4),Wall);
+    board->SetCellType(sf::Vector2i(7,5),Wall);
+    board->SetCellType(sf::Vector2i(7,6),Wall);
+    board->SetCellType(sf::Vector2i(7,7),Wall);
+    board->SetCellType(sf::Vector2i(5,7),Wall);
+    board->SetCellType(sf::Vector2i(7,7),Wall);
+    board->SetCellType(sf::Vector2i(8,7),Wall);
+    board->SetCellType(sf::Vector2i(9,7),Wall);
+    
+    board->SetCellType(sf::Vector2i(0,0),Start);
+    board->SetCellType(sf::Vector2i(8,8),End);
+    board->SetCellType(sf::Vector2i(12,1),Checkpoint);
+    board->CreatePortal(sf::Vector2i(5,5),sf::Vector2i(13,5));
+    board->ValidateCells(); 
 }
 std::vector<Node*> CalculatePath(AStarBoard* board)
 {
@@ -64,16 +65,21 @@ std::vector<Node*> CalculatePath(AStarBoard* board)
 	delete astar;
 	return path;
 }
-bool DisplayPath(AStarBoard* board, std::vector<Node*> path, int cellToDisplay)
-{
-	if (cellToDisplay < path.size())
-	{
-		Node* node = path.at(cellToDisplay);
-		board->SetCellType(node, Path, false);
-	}
-	return cellToDisplay == path.size() - 1;
 
-}
+bool DisplayPath(AStarBoard* board, std::vector<Node*> path,int cellToDisplay)
+ {
+     if (cellToDisplay < path.size())
+     {
+         int i=0;
+         for(auto node : path)
+         {
+             CellType type = i<=cellToDisplay?Path:Empty;
+             board->SetCellType(node,type,false);
+             i++;
+         }
+     }
+     return cellToDisplay == path.size()-1;
+ }
 
 int main()
 {

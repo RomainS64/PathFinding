@@ -120,7 +120,7 @@ void AStarBoard::CreatePortal(sf::Vector2i entry, sf::Vector2i exit)
 
 void AStarBoard::SetCellType(Node* node, CellType type,bool overrideCell)
 {
-    if(overrideCell || _cells[node]->cellType == Empty)
+    if(overrideCell || _cells[node]->cellType == Empty || _cells[node]->cellType == Path)
     {
         _cells[node]->cellType = type;
         UpdateCell(*_cells.find(node));

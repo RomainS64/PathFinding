@@ -8,18 +8,20 @@ set (HEADERS
     ${HEADER_DIR}/Scene.h
     ${HEADER_DIR}/SceneObject.h
     ${HEADER_DIR}/Square.h
-	${HEADER_DIR}/Event.h
+    ${HEADER_DIR}/Event.h
     ${HEADER_DIR}/InputSystem.h
-	${HEADER_DIR}/Button.h
+    ${HEADER_DIR}/Button.h
+    ${HEADER_DIR}/Sprite.h
 )
 
 set (SOURCES
     ${SOURCE_DIR}/Scene.cpp
     ${SOURCE_DIR}/SceneObject.cpp
     ${SOURCE_DIR}/Square.cpp
-	${SOURCE_DIR}/Event.cpp
+    ${SOURCE_DIR}/Event.cpp
     ${SOURCE_DIR}/InputSystem.cpp
-	 ${SOURCE_DIR}/Button.cpp
+    ${SOURCE_DIR}/Button.cpp
+    ${SOURCE_DIR}/Sprite.cpp
 )
 
 add_library(${PROJECT_NAME}
