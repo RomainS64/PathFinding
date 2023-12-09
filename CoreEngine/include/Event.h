@@ -3,6 +3,7 @@
 #include <string>
 #include <vector>
 #include <unordered_map>
+#include <functional>
 
 using EventID = std::string;
 
@@ -18,9 +19,15 @@ public:
 class EventSubscriber
 {
 public:
+	using CallbackFunction = std::function<void()>;
+
 	EventSubscriber() {};
 	virtual ~EventSubscriber() {};
-	virtual void onNotify(const EventID& _ID) = 0;
+	virtual void onNotify(const EventBase& _eventB) = 0;
+	void subscribe(CallbackFunction callback) { _callbacks.push_back(callback); };
+
+protected:
+	std::vector<CallbackFunction> _callbacks;
 };
 
 class EventPublisher

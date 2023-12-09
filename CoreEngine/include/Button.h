@@ -14,12 +14,16 @@ public:
 	virtual void Draw() override;
 	virtual bool Contains(sf::Vector2i position) override;
 
-	virtual void onNotify(const EventID& _ID) override;
+	virtual void onNotify(const EventBase& _eventB) override;
+
+	void SetButtonColor(sf::Color color);
+	void SetTextColor(sf::Color color);
+	void SetButtonOutlineColor(sf::Color color);
+	void SetButtonOutlineThickness(float thickness);
 
 private:
 	sf::RectangleShape _button;
 	sf::Text _text;
-	sf::Font _font;
 	sf::Vector2f _size;
 };
 

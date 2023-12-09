@@ -1,12 +1,13 @@
 #include "InputSystem.h"
 #include "iostream"
+#include <Button.h>
 
 const EventID InputSystem::GameStateChanged = "GameStateChanged";
 
 sf::Clock g_DeltaTimeClock;
 float g_DeltaTime;
 
-InputSystem::InputSystem(sf::RenderWindow* window) : _window(window)
+InputSystem::InputSystem(sf::RenderWindow* window, Scene* currentScene) : _window(window), _currentScene(currentScene)
 {
 }
 
@@ -17,17 +18,23 @@ InputSystem::~InputSystem()
 
 void InputSystem::attach(const EventID& _ID, EventSubscriber* subscriber)
 {
-	// TODO: Add the subscriber to the list of subscribers for the given event
+	m_hashSubscribers[_ID].push_back(subscriber);
 }
 
 void InputSystem::detach(const EventID& _ID, EventSubscriber* subscriber)
 {
-	// TODO: Remove the subscriber from the list of subscribers for the given event
+	auto& subscribers = m_hashSubscribers[_ID];
+	subscribers.erase(std::remove(subscribers.begin(), subscribers.end(), subscriber), subscribers.end());
 }
 
 void InputSystem::notify(const EventID& _ID)
 {
-	// TODO: Notify all subscribers of the given event
+	if (m_hashSubscribers.find(_ID) != m_hashSubscribers.end())
+		for (auto subscriber : m_hashSubscribers[_ID])
+		{
+			EventBase* eventB = new EventBase(_ID);
+			subscriber->onNotify(*eventB);
+		}
 }
 
 void InputSystem::Update()
@@ -36,10 +43,13 @@ void InputSystem::Update()
 	while (_window->pollEvent(event)) {
 		if (event.type == sf::Event::Closed)
 			_window->close();
-		// Check if the space bar is pressed
 
 		if (event.type == sf::Event::MouseButtonPressed)
 		{
+			if (event.mouseButton.button == sf::Mouse::Left)
+			{
+				notify("LeftClick");
+			}
 		}
 		if (event.type == sf::Event::KeyReleased && event.key.code == sf::Keyboard::Space)
 			m_spacePressed = false;

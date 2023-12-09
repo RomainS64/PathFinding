@@ -15,6 +15,9 @@
 #include "AStarBoard.h"
 #include "AStar.h"
 #include <InputSystem.h>
+#include <Button.h>
+
+#include <filesystem>
 
 
 void SetupProject(AStarBoard* board, Scene* scene)
@@ -80,8 +83,30 @@ int main()
 	sf::RenderWindow window(sf::VideoMode(1920 / 2, 1080 / 2), "PathFinding");
 	window.setFramerateLimit(60);
 
+	sf::Font* font = new sf::Font();
+	std::string fontPath = "C:/Windows/Fonts/Calibri.ttf";
+
+	// Vérifie si le fichier de la police existe avant de tenter de charger la police
+	if (!std::filesystem::exists(fontPath))
+		std::cout << "Le fichier de la police n'existe pas : " << fontPath << std::endl;
+	if (!font->loadFromFile(fontPath))
+	{
+		std::cout << "Error loading font\n";
+	}
+
+	// Button stuff
+	Button* startButton = new Button(&window, sf::Vector2f(0.1f, 0.1f), sf::Vector2f(150.f, 50.f), sf::Text("Start", *font));
+	startButton->SetButtonColor(sf::Color::Red);
+	startButton->SetTextColor(sf::Color::White);
+	startButton->SetButtonOutlineColor(sf::Color::Black);
+	startButton->SetButtonOutlineThickness(2.f);
+	startButton->subscribe([]() {std::cout << "Start button Click" << std::endl; });
+	
 	AStarBoard* board = new AStarBoard(&window, sf::Vector2f(0.1f, 0.1f), sf::Vector2i(16, 9), 0.8f);
+	
 	std::list<SceneObject*> sceneObjects;
+
+	sceneObjects.push_back(startButton);
 	sceneObjects.push_back(board);
 	Scene* scene = new Scene(&window, sceneObjects);
 
@@ -90,9 +115,12 @@ int main()
 	bool isPathfindingDone = false;
 	bool isFullyDisplayed = false;
 
+	
+
 	SetupProject(board, scene);
 
-	InputSystem* inputSystem = new InputSystem(&window);
+	InputSystem* inputSystem = new InputSystem(&window, scene);
+	inputSystem->attach("LeftClick", startButton);
 
 	//Scene stuff
 
@@ -100,7 +128,7 @@ int main()
 
 	while (window.isOpen())
 	{
-		sf::Event event;
+		/*sf::Event event;
 		while (window.pollEvent(event)) {
 			if (event.type == sf::Event::Closed)window.close();
 			// Check if the space bar is pressed
@@ -131,11 +159,13 @@ int main()
 					SetupProject(board, scene);
 				}
 			}
-		}
-		//inputSystem->Update();
+		}*/
+		inputSystem->Update();
 		scene->Update();
 		scene->Draw();
 	}
 	delete scene;
+	delete inputSystem;
+	delete font;
 	return 0;
 }
