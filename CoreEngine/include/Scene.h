@@ -12,6 +12,8 @@ public:
 	void Update();
 	void Draw();
 
+	std::list<SceneObject*> GetSceneObjects();
+
 	~Scene();
 
 private:

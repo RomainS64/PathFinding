@@ -31,6 +31,11 @@ void Scene::Draw()
 	_renderWindows->display();
 }
 
+std::list<SceneObject*> Scene::GetSceneObjects()
+{
+	return _sceneObjects;
+}
+
 Scene::~Scene()
 {
 	for (const SceneObject* sceneObject : _sceneObjects) 
