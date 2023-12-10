@@ -136,7 +136,7 @@ int main()
 	
 	SetupProject(board, scene);
 
-	InputSystem* inputSystem = new InputSystem(&window, scene);
+	InputSystem* inputSystem = new InputSystem(&window);
 	inputSystem->attach("LeftClick", menuButton);
 	inputSystem->attach("LeftClick", startButton);
 	inputSystem->attach("LeftClick", nextButton);
@@ -156,7 +156,7 @@ int main()
 	});
 	previousButton->subscribe([&isPathfindingDone,&board,&path,&isFullyDisplayed,&currentCellToDisplay]()
 		{
-			if (isPathfindingDone & currentCellToDisplay >0)
+			if (isPathfindingDone && currentCellToDisplay >0)
 			{
 				currentCellToDisplay--;
 				isFullyDisplayed = DisplayPath(board, path, currentCellToDisplay);
@@ -164,7 +164,7 @@ int main()
 		});
 	nextButton->subscribe([&isPathfindingDone,&board,&path,&isFullyDisplayed,&currentCellToDisplay]()
 		{
-			if (isPathfindingDone & !isFullyDisplayed)
+			if (isPathfindingDone && !isFullyDisplayed)
 			{
 				isFullyDisplayed = DisplayPath(board, path, currentCellToDisplay);
 				currentCellToDisplay++;
