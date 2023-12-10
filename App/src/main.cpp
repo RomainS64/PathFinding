@@ -19,6 +19,8 @@
 
 #include <filesystem>
 
+#include "Sprite.h"
+
 
 void SetupProject(AStarBoard* board, Scene* scene)
 {
@@ -94,17 +96,27 @@ int main()
 	{
 		std::cout<<"Unable to load font.";
 	}
+	sf::Texture* debugTexture = new sf::Texture();
+	if (!debugTexture->loadFromFile("../../Assets/Title.png"))
+	{
+		std::cout<<"Unable to load texture.";
+	}
 	
 	// Button stuff
-	Button* menuButton = new Button(&window, sf::Vector2f(0.4, 0.4), sf::Vector2f(0.2f, 0.07f), sf::Text("Start Game", *font),sf::Color::Green,sf::Color::White);
+	Sprite* title = new Sprite(&window,debugTexture,sf::Vector2f(0.2, 0.1),sf::Vector2f(0.6, 0.6));
+	Button* menuButton = new Button(&window, sf::Vector2f(0.4, 0.4), sf::Vector2f(0.2f, 0.07f), sf::Text("Start Game", *font),sf::Color(100,100,100),sf::Color::White);
 	std::list<SceneObject*> menuObjects;
 	menuObjects.push_back(menuButton);
+	menuObjects.push_back(title);
 	Scene* menuScene = new Scene(&window, menuObjects);
 	Scene* currentScene = menuScene;
+
+
+
 	
 	Button* startButton = new Button(&window, sf::Vector2f(0, 0), sf::Vector2f(0.2f, 0.07f), sf::Text("Find path", *font),sf::Color::Green,sf::Color::White);
-	Button* nextButton = new Button(&window, sf::Vector2f(0.5f, 0), sf::Vector2f(0.2f, 0.07f), sf::Text("Previous step", *font),sf::Color::Blue,sf::Color::White);
-	Button* previousButton = new Button(&window, sf::Vector2f(0.25f, 0), sf::Vector2f(0.2f, 0.07f), sf::Text("Next step", *font),sf::Color::Blue,sf::Color::White);
+	Button* nextButton = new Button(&window, sf::Vector2f(0.5f, 0), sf::Vector2f(0.2f, 0.07f), sf::Text("Next step", *font),sf::Color::Blue,sf::Color::White);
+	Button* previousButton = new Button(&window, sf::Vector2f(0.25f, 0), sf::Vector2f(0.2f, 0.07f), sf::Text("Previous step", *font),sf::Color::Blue,sf::Color::White);
 	Button* restartButton = new Button(&window, sf::Vector2f(0.75f, 0), sf::Vector2f(0.2f, 0.07f), sf::Text("Restart game", *font),sf::Color::Red,sf::Color::White);
 	
 	AStarBoard* board = new AStarBoard(&window, sf::Vector2f(0.1f, 0.1f), sf::Vector2i(16, 9), 0.8f);
@@ -184,5 +196,6 @@ int main()
 	delete scene;
 	delete inputSystem;
 	delete font;
+	delete debugTexture;
 	return 0;
 }

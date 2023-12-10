@@ -5,15 +5,14 @@ Button::Button(sf::RenderWindow* renderWindows, sf::Vector2f position, sf::Vecto
 {
 	sf::Vector2u windowsSize = _renderWindows->getSize();
 	
-	
 	_button = sf::RectangleShape(sf::Vector2f(size.x*windowsSize.x,size.y*windowsSize.x));
 	_button.setPosition(sf::Vector2f(_position.x*windowsSize.x,_position.y*windowsSize.x));
 	_button.setFillColor(buttonColor);
 	_button.setOutlineColor(buttonColor);
 	_button.setOutlineThickness(1.f);
 
-	_text.setPosition(_position.x*windowsSize.x + 10.0f, _position.y*windowsSize.x + 5.0f);
-	_text.setCharacterSize(20);
+	_text.setPosition(_position.x*windowsSize.x+10, _position.y*windowsSize.x+((size.y*windowsSize.x)/4.f));
+	_text.setCharacterSize(25);
 	_text.setFillColor(textColor);
 }
 

@@ -4,7 +4,7 @@
 class Sprite : public SceneObject
 {
 public:
-    Sprite(sf::RenderWindow* renderWindow, sf::Texture* texture, sf::Vector2f position);
+    Sprite(sf::RenderWindow* renderWindow, sf::Texture* texture, sf::Vector2f position,sf::Vector2f size);
     void Start() override;
     void Update() override;
     void Draw() override;
@@ -12,5 +12,5 @@ public:
     virtual ~Sprite();
 
 private:
-    sf::Sprite _sprite;
+    sf::Sprite* _sprite;
 };
