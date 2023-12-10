@@ -90,12 +90,22 @@ int main()
 	window.setFramerateLimit(60);
 
 	sf::Font* font = new sf::Font();
-
+	if (!font->loadFromFile("../../Assets/gamefont.ttf"))
+	{
+		std::cout<<"Unable to load font.";
+	}
+	
 	// Button stuff
-	Button* startButton = new Button(&window, sf::Vector2f(0, 0), sf::Vector2f(0.2f, 0.07f), sf::Text("Start", *font),sf::Color::Green,sf::Color::White);
-	Button* nextButton = new Button(&window, sf::Vector2f(0.2f, 0), sf::Vector2f(0.2f, 0.07f), sf::Text("Start", *font),sf::Color::Blue,sf::Color::White);
-	Button* previousButton = new Button(&window, sf::Vector2f(0.4f, 0), sf::Vector2f(0.2f, 0.07f), sf::Text("Start", *font),sf::Color::Blue,sf::Color::White);
-	Button* restartButton = new Button(&window, sf::Vector2f(0.6f, 0), sf::Vector2f(0.2f, 0.07f), sf::Text("Start", *font),sf::Color::Red,sf::Color::White);
+	Button* menuButton = new Button(&window, sf::Vector2f(0.4, 0.4), sf::Vector2f(0.2f, 0.07f), sf::Text("Start Game", *font),sf::Color::Green,sf::Color::White);
+	std::list<SceneObject*> menuObjects;
+	menuObjects.push_back(menuButton);
+	Scene* menuScene = new Scene(&window, menuObjects);
+	Scene* currentScene = menuScene;
+	
+	Button* startButton = new Button(&window, sf::Vector2f(0, 0), sf::Vector2f(0.2f, 0.07f), sf::Text("Find path", *font),sf::Color::Green,sf::Color::White);
+	Button* nextButton = new Button(&window, sf::Vector2f(0.5f, 0), sf::Vector2f(0.2f, 0.07f), sf::Text("Previous step", *font),sf::Color::Blue,sf::Color::White);
+	Button* previousButton = new Button(&window, sf::Vector2f(0.25f, 0), sf::Vector2f(0.2f, 0.07f), sf::Text("Next step", *font),sf::Color::Blue,sf::Color::White);
+	Button* restartButton = new Button(&window, sf::Vector2f(0.75f, 0), sf::Vector2f(0.2f, 0.07f), sf::Text("Restart game", *font),sf::Color::Red,sf::Color::White);
 	
 	AStarBoard* board = new AStarBoard(&window, sf::Vector2f(0.1f, 0.1f), sf::Vector2i(16, 9), 0.8f);
 	std::list<SceneObject*> sceneObjects;
@@ -115,10 +125,15 @@ int main()
 	SetupProject(board, scene);
 
 	InputSystem* inputSystem = new InputSystem(&window, scene);
+	inputSystem->attach("LeftClick", menuButton);
 	inputSystem->attach("LeftClick", startButton);
 	inputSystem->attach("LeftClick", nextButton);
 	inputSystem->attach("LeftClick", previousButton);
 	inputSystem->attach("LeftClick", restartButton);
+	menuButton->subscribe([&currentScene,scene]()
+	{
+		currentScene = scene;
+	});
 	startButton->subscribe([&isPathfindingDone,&board,&path]()
 	{
 		if (!isPathfindingDone)
@@ -163,8 +178,8 @@ int main()
 	while (window.isOpen())
 	{
 		inputSystem->Update();
-		scene->Update();
-		scene->Draw();
+		currentScene->Update();
+		currentScene->Draw();
 	}
 	delete scene;
 	delete inputSystem;
