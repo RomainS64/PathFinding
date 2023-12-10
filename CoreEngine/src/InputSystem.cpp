@@ -7,7 +7,7 @@ const EventID InputSystem::GameStateChanged = "GameStateChanged";
 sf::Clock g_DeltaTimeClock;
 float g_DeltaTime;
 
-InputSystem::InputSystem(sf::RenderWindow* window, Scene* currentScene) : _window(window), _currentScene(currentScene)
+InputSystem::InputSystem(sf::RenderWindow* window) : _window(window)
 {
 }
 

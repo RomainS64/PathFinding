@@ -11,7 +11,7 @@
 class InputSystem : public EventPublisher
 {
 public:
-	InputSystem(sf::RenderWindow* window, Scene* currentScene);
+	InputSystem(sf::RenderWindow* window);
 	~InputSystem();
 
 	virtual void attach(const EventID& _ID, EventSubscriber* subscriber) override;
@@ -23,7 +23,6 @@ public:
 	void Update();
 
 private:
-	Scene* _currentScene;
 	sf::RenderWindow* _window;
 
 	bool m_spacePressed = false;
