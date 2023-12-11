@@ -9,6 +9,12 @@ void Graph::addEdge(Node* from, Node* to, double cost) {
     edges[from->id][to->id] = cost;
 }
 
+void Graph::clearGraph()
+{
+    nodes.clear();
+    edges.clear();
+}
+
 std::vector<Node*> Graph::getNeighbors(Node* node) {
     std::vector<Node*> neighbors;
 

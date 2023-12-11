@@ -67,6 +67,7 @@ void AStarBoard::Draw()
         cell.second->square->Draw();
     }
 }
+
 void AStarBoard::UpdateCell(std::pair<Node*, BoardCell*> cell)
 {
     CellType type = cell.second->cellType;

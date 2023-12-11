@@ -1,16 +1,16 @@
 #include "Event.h"
 
-void EventPublisher::attach(const EventID& _ID, EventSubscriber* subscriber)
+void EventPublisher::Attach(const EventID& _ID, EventSubscriber* subscriber)
 {
-	m_hashSubscribers[_ID].push_back(subscriber);
+	_hashSubscribers[_ID].push_back(subscriber);
 }
 
-void EventPublisher::detach(const EventID& _ID, EventSubscriber* subscriber)
+void EventPublisher::Detach(const EventID& _ID, EventSubscriber* subscriber)
 {
-	// TODO: Implement detach
+	// TODO: Implement Detach
 }
 
-void EventPublisher::notify(const EventID& _ID)
+void EventPublisher::Notify(const EventID& _ID)
 {
-	// TODO: Implement notify
+	// TODO: Implement Notify
 }

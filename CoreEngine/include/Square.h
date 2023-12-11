@@ -13,7 +13,7 @@ public:
     bool Contains(sf::Vector2i position) override;
 
 private:
-    sf::RectangleShape* _shape{};
+    sf::RectangleShape* _shape;
     float _diameter;
     sf::Color _color;
     

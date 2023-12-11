@@ -7,14 +7,14 @@ class Button : public SceneObject, public EventSubscriber
 {
 public:
 	Button(sf::RenderWindow* renderWindows, sf::Vector2f position, sf::Vector2f size, sf::Text text,sf::Color buttonColor,sf::Color textColor);
-	~Button();
+	~Button() override;
 
 	virtual void Start() override;
 	virtual void Update() override;
 	virtual void Draw() override;
 	virtual bool Contains(sf::Vector2i position) override;
 
-	virtual void onNotify(const EventBase& _eventB) override;
+	virtual void OnNotify(const EventBase& _eventB) override;
 
 	void SetButtonColor(sf::Color color);
 	void SetTextColor(sf::Color color);

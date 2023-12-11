@@ -16,24 +16,24 @@ InputSystem::~InputSystem()
 	this->_window = nullptr;
 }
 
-void InputSystem::attach(const EventID& _ID, EventSubscriber* subscriber)
+void InputSystem::Attach(const EventID& _ID, EventSubscriber* subscriber)
 {
-	m_hashSubscribers[_ID].push_back(subscriber);
+	_hashSubscribers[_ID].push_back(subscriber);
 }
 
-void InputSystem::detach(const EventID& _ID, EventSubscriber* subscriber)
+void InputSystem::Detach(const EventID& _ID, EventSubscriber* subscriber)
 {
-	auto& subscribers = m_hashSubscribers[_ID];
+	auto& subscribers = _hashSubscribers[_ID];
 	subscribers.erase(std::remove(subscribers.begin(), subscribers.end(), subscriber), subscribers.end());
 }
 
-void InputSystem::notify(const EventID& _ID)
+void InputSystem::Notify(const EventID& _ID)
 {
-	if (m_hashSubscribers.find(_ID) != m_hashSubscribers.end())
-		for (auto subscriber : m_hashSubscribers[_ID])
+	if (_hashSubscribers.find(_ID) != _hashSubscribers.end())
+		for (auto subscriber : _hashSubscribers[_ID])
 		{
 			EventBase* eventB = new EventBase(_ID);
-			subscriber->onNotify(*eventB);
+			subscriber->OnNotify(*eventB);
 		}
 }
 
@@ -48,7 +48,7 @@ void InputSystem::Update()
 		{
 			if (event.mouseButton.button == sf::Mouse::Left)
 			{
-				notify("LeftClick");
+				Notify("LeftClick");
 			}
 		}
 		if (event.type == sf::Event::KeyReleased && event.key.code == sf::Keyboard::Space)

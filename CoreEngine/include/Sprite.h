@@ -9,7 +9,7 @@ public:
     void Update() override;
     void Draw() override;
     bool Contains(sf::Vector2i position) override;
-    virtual ~Sprite();
+    ~Sprite() override;
 
 private:
     sf::Sprite* _sprite;

@@ -18,17 +18,14 @@ Button::Button(sf::RenderWindow* renderWindows, sf::Vector2f position, sf::Vecto
 
 Button::~Button()
 {
-	// TODO: Implement ~Button
 }
 
 void Button::Start()
 {
-	// TODO: Implement Start
 }
 
 void Button::Update()
 {
-
 }
 
 void Button::Draw()
@@ -47,7 +44,7 @@ bool Button::Contains(sf::Vector2i position)
 	return false;
 }
 
-void Button::onNotify(const EventBase& _eventB)
+void Button::OnNotify(const EventBase& _eventB)
 {
 	EventID id = _eventB._id;
 	if (id == "LeftClick")

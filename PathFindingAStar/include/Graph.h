@@ -19,6 +19,7 @@ public:
     };
     void addNode(Node* node);
     void addEdge(Node* from, Node* to, double cost = 1.0);
+    void clearGraph();
     std::vector<Node*> getNeighbors(Node* node);
     double getEdgeCost(Node* from, Node* to);
     

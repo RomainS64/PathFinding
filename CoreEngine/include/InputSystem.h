@@ -14,9 +14,9 @@ public:
 	InputSystem(sf::RenderWindow* window);
 	~InputSystem();
 
-	virtual void attach(const EventID& _ID, EventSubscriber* subscriber) override;
-	virtual void detach(const EventID& _ID, EventSubscriber* subscriber) override;
-	virtual void notify(const EventID& _ID) override;
+	virtual void Attach(const EventID& _ID, EventSubscriber* subscriber) override;
+	virtual void Detach(const EventID& _ID, EventSubscriber* subscriber) override;
+	virtual void Notify(const EventID& _ID) override;
 
 	static const EventID GameStateChanged;
 

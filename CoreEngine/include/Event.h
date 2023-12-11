@@ -23,8 +23,8 @@ public:
 
 	EventSubscriber() {};
 	virtual ~EventSubscriber() {};
-	virtual void onNotify(const EventBase& _eventB) = 0;
-	void subscribe(CallbackFunction callback) { _callbacks.push_back(callback); };
+	virtual void OnNotify(const EventBase& _eventB) = 0;
+	void Subscribe(CallbackFunction callback) { _callbacks.push_back(callback); };
 
 protected:
 	std::vector<CallbackFunction> _callbacks;
@@ -36,12 +36,12 @@ public:
 	EventPublisher() {};
 	virtual ~EventPublisher() {};
 
-	virtual void attach(const EventID& _ID, EventSubscriber* subscriber);
-	virtual void detach(const EventID& _ID, EventSubscriber* subscriber);
-	virtual void notify(const EventID& _ID);
+	virtual void Attach(const EventID& _ID, EventSubscriber* subscriber);
+	virtual void Detach(const EventID& _ID, EventSubscriber* subscriber);
+	virtual void Notify(const EventID& _ID);
 
 protected:
-	std::unordered_map< EventID, std::vector<EventSubscriber*> > m_hashSubscribers;
+	std::unordered_map< EventID, std::vector<EventSubscriber*> > _hashSubscribers;
 };
 
 
