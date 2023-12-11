@@ -120,6 +120,12 @@ int main()
 	Button* nextButton = new Button(&window, sf::Vector2f(0.5f, 0), sf::Vector2f(0.2f, 0.07f), sf::Text("Next step", *font), sf::Color::Blue, sf::Color::Black);
 	Button* previousButton = new Button(&window, sf::Vector2f(0.25f, 0), sf::Vector2f(0.2f, 0.07f), sf::Text("Previous step", *font), sf::Color::Blue, sf::Color::Black);
 	Button* restartButton = new Button(&window, sf::Vector2f(0.75f, 0), sf::Vector2f(0.2f, 0.07f), sf::Text("Restart game", *font), sf::Color::Red, sf::Color::Black);
+	Button* wallButton = new Button(&window, sf::Vector2f(0.f, 0.1f), sf::Vector2f(0.1f, 0.06f), sf::Text("Wall", *font), sf::Color::White, sf::Color::Black);
+	Button* portalButton = new Button(&window, sf::Vector2f(0.f, 0.18f), sf::Vector2f(0.1f, 0.06f), sf::Text("Portal", *font), sf::Color::Green, sf::Color::Black);
+	Button* checkpointButton = new Button(&window, sf::Vector2f(0.f, 0.26f), sf::Vector2f(0.1f, 0.06f), sf::Text("Checkpoint", *font), sf::Color(255, 128, 0), sf::Color::Black);
+	Button* startCellButton = new Button(&window, sf::Vector2f(0.f, 0.34f), sf::Vector2f(0.1f, 0.06f), sf::Text("Start", *font), sf::Color::Blue, sf::Color::Black);
+	Button* endCellButton = new Button(&window, sf::Vector2f(0.f, 0.42f), sf::Vector2f(0.1f, 0.06f), sf::Text("End", *font), sf::Color::Red, sf::Color::Black);
+	Button* emptyButton = new Button(&window, sf::Vector2f(0.9f, 0.1f), sf::Vector2f(0.1f, 0.06f), sf::Text("Empty", *font), sf::Color(100,100,100), sf::Color::Black);
 
 	AStarBoard* board = new AStarBoard(&window, sf::Vector2f(0.15f, 0.1f), sf::Vector2i(16, 9), 0.7f);
 	std::list<SceneObject*> sceneObjects;
@@ -128,6 +134,12 @@ int main()
 	sceneObjects.push_back(nextButton);
 	sceneObjects.push_back(previousButton);
 	sceneObjects.push_back(restartButton);
+	sceneObjects.push_back(wallButton);
+	sceneObjects.push_back(portalButton);
+	sceneObjects.push_back(checkpointButton);
+	sceneObjects.push_back(startCellButton);
+	sceneObjects.push_back(endCellButton);
+	sceneObjects.push_back(emptyButton);
 	sceneObjects.push_back(board);
 	Scene* gameScene = new Scene(&window, sceneObjects);
 
@@ -145,6 +157,12 @@ int main()
 	inputSystem->Attach("LeftClick", nextButton);
 	inputSystem->Attach("LeftClick", previousButton);
 	inputSystem->Attach("LeftClick", restartButton);
+	inputSystem->Attach("LeftClick", wallButton);
+	inputSystem->Attach("LeftClick", portalButton);
+	inputSystem->Attach("LeftClick", checkpointButton);
+	inputSystem->Attach("LeftClick", startCellButton);
+	inputSystem->Attach("LeftClick", endCellButton);
+	inputSystem->Attach("LeftClick", emptyButton);
 	inputSystem->Attach("LeftClick", board);
 	menuButton->Subscribe([&currentScene, gameScene]()
 		{
@@ -184,6 +202,13 @@ int main()
 			board->clearGraph();
 			SetupProject(board, gameScene);
 		});
+
+	wallButton->Subscribe([&currentCellType]() { currentCellType = Wall; });
+	portalButton->Subscribe([&currentCellType]() { currentCellType = Portal; });
+	checkpointButton->Subscribe([&currentCellType]() { currentCellType = Checkpoint; });
+	startCellButton->Subscribe([&currentCellType]() { currentCellType = Start; });
+	endCellButton->Subscribe([&currentCellType]() { currentCellType = End; });
+	emptyButton->Subscribe([&currentCellType]() { currentCellType = Empty; });
 
 	board->Subscribe([&board, &window, &currentCellType]()
 		{

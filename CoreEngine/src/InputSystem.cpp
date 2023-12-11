@@ -50,19 +50,9 @@ void InputSystem::Update()
 			{
 				Notify("LeftClick");
 			}
-		}
-		if (event.type == sf::Event::KeyReleased && event.key.code == sf::Keyboard::Space)
-			m_spacePressed = false;
-		else if (event.type == sf::Event::KeyPressed)
-		{
-			if (event.key.code == sf::Keyboard::Escape)
+			else if (event.mouseButton.button == sf::Mouse::Right)
 			{
-				// TODO: Exit the game
-			}
-			else if (event.key.code == sf::Keyboard::Space)
-			{
-				// TODO: Import main.cpp code here
-				m_spacePressed = true;
+				Notify("RightClick");
 			}
 		}
 	}
