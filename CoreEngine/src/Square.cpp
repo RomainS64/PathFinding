@@ -37,5 +37,5 @@ void Square::SetColor(sf::Color color)
 
 bool Square::Contains(sf::Vector2i position)
 {
-    return _shape->getTextureRect().contains(position);
+    return _shape->getGlobalBounds().contains(position.x, position.y);
 }

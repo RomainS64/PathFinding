@@ -20,5 +20,3 @@ target_link_libraries(${PROJECT_NAME}
 	PathFindingAStar
 	Content
 )
-
-file(COPY ${CMAKE_SOURCE_DIR}/App/Resources/ DESTINATION ${CMAKE_BINARY_DIR}/Resources/)
