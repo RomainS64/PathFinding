@@ -209,6 +209,11 @@ std::map<Node*, BoardCell*> AStarBoard::GetCellsMap()
 	return _cells;
 }
 
+std::list<Portals*> AStarBoard::GetPortals()
+{
+	return _portals;
+}
+
 sf::Vector2i AStarBoard::GetBoardPosition()
 {
 	return _renderWindows->mapCoordsToPixel(_position);

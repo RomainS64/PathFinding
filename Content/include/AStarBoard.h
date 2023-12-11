@@ -39,6 +39,7 @@ public:
     std::pair<Node*,BoardCell*> GetCell(sf::Vector2i position);
     void ValidateCells();
     std::map<Node*,BoardCell*> GetCellsMap();
+    std::list<Portals*> GetPortals();
     sf::Vector2i GetBoardPosition();
     bool Contains(sf::Vector2i position) override;
 
