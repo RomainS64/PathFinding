@@ -13,18 +13,15 @@ struct Node {
 class Graph {
 public:
     Graph() = default;
-    virtual ~Graph()
-    {
-        for (auto node : nodes)delete node.second;
-    };
-    void addNode(Node* node);
-    void addEdge(Node* from, Node* to, double cost = 1.0);
-    void removeEdge(Node* from, Node* to);
-    void clearGraph();
-    std::vector<Node*> getNeighbors(Node* node);
-    double getEdgeCost(Node* from, Node* to);
+    virtual ~Graph();
+    virtual void ClearGraph();
+    void AddNode(Node* node);
+    void AddEdge(Node* from, Node* to, double cost = 1.0);
+    void RemoveEdge(Node* from, Node* to);
+    std::vector<Node*> GetNeighbors(Node* node);
+    double GetEdgeCost(Node* from, Node* to);
     
 private:
-    std::unordered_map<int, Node*> nodes;
-    std::unordered_map<int, std::unordered_map<int, double>> edges;
+    std::unordered_map<int, Node*> _nodes;
+    std::unordered_map<int, std::unordered_map<int, double>> _edges;
 };

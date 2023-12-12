@@ -29,8 +29,8 @@ std::vector<Node*> AStar::findPath(Node* start, Node* goal) {
             return path;
         }
 
-        for (Node* neighbor : graph.getNeighbors(current)) {
-            double tentativeGScore = getGScore(current) + graph.getEdgeCost(current, neighbor);
+        for (Node* neighbor : graph.GetNeighbors(current)) {
+            double tentativeGScore = getGScore(current) + graph.GetEdgeCost(current, neighbor);
 
             if (!gScore.count(neighbor) || tentativeGScore < getGScore(neighbor)) {
                 cameFrom[neighbor] = current;

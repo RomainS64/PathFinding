@@ -66,6 +66,19 @@ void AStarBoard::Draw()
 	}
 }
 
+void AStarBoard::ClearGraph()
+{
+	Graph::ClearGraph();
+	for (auto cell : _cells)
+	{
+		SetCellType(cell.first->position, Empty);
+	}
+	_portals.clear();
+	startNode = nullptr;
+	endNode = nullptr;
+	
+}
+
 void AStarBoard::UpdateCell(std::pair<Node*, BoardCell*> cell)
 {
 	CellType type = cell.second->cellType;
@@ -159,11 +172,11 @@ void AStarBoard::ValidateCells()
 {
 	for (auto cell : _cells)
 	{
-		addNode(cell.first);
+		AddNode(cell.first);
 	}
 	for (auto portal : _portals)
 	{
-		addEdge(portal->entry, portal->exit);
+		AddEdge(portal->entry, portal->exit);
 	}
 	for (int x = 0; x < _size.x; x++) {
 		for (int y = 0; y < _size.y; y++) {
@@ -174,7 +187,7 @@ void AStarBoard::ValidateCells()
 				std::pair<Node*, BoardCell*> linkedCell = GetCell(sf::Vector2i(x - 1, y));
 				if (linkedCell.second->cellType != Wall)
 				{
-					addEdge(cell.first, linkedCell.first);
+					AddEdge(cell.first, linkedCell.first);
 				}
 
 			}
@@ -182,7 +195,7 @@ void AStarBoard::ValidateCells()
 				std::pair<Node*, BoardCell*> linkedCell = GetCell(sf::Vector2i(x + 1, y));
 				if (linkedCell.second->cellType != Wall)
 				{
-					addEdge(cell.first, linkedCell.first);
+					AddEdge(cell.first, linkedCell.first);
 				}
 
 			}
@@ -190,14 +203,14 @@ void AStarBoard::ValidateCells()
 				std::pair<Node*, BoardCell*> linkedCell = GetCell(sf::Vector2i(x, y - 1));
 				if (linkedCell.second->cellType != Wall)
 				{
-					addEdge(cell.first, linkedCell.first);
+					AddEdge(cell.first, linkedCell.first);
 				}
 			}
 			if (y != _size.y - 1) {
 				std::pair<Node*, BoardCell*> linkedCell = GetCell(sf::Vector2i(x, y + 1));
 				if (linkedCell.second->cellType != Wall)
 				{
-					addEdge(cell.first, linkedCell.first);
+					AddEdge(cell.first, linkedCell.first);
 				}
 			}
 		}

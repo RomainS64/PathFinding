@@ -33,6 +33,7 @@ public:
     void Start()override;
     void Update()override;
     void Draw()override;
+    void ClearGraph() override;
     void SetCellType(sf::Vector2i position,CellType type);
     void CreatePortal(sf::Vector2i entry,sf::Vector2i exit);
     void SetCellType(Node*,CellType type,bool overrideCell = true);
@@ -47,8 +48,8 @@ public:
 
     virtual void OnNotify(const EventBase& _eventB) override;
     
-    Node* startNode;
-    Node* endNode;
+    Node* startNode = nullptr;
+    Node* endNode = nullptr;
     std::list<Node*> checkpoints;
 private:
     

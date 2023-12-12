@@ -27,7 +27,6 @@
 void SetupProject(AStarBoard* board, Scene* scene)
 {
 	scene->Start();
-	board->ValidateCells();
 }
 std::vector<Node*> CalculatePath(AStarBoard* board)
 {
@@ -144,7 +143,7 @@ int main()
 		});
 	startButton->Subscribe([&isPathfindingDone, &board, &path]()
 		{
-			if (!isPathfindingDone)
+			if (!isPathfindingDone && board->startNode && board->endNode)
 			{
 				path = CalculatePath(board);
 				isPathfindingDone = !path.empty();
@@ -173,7 +172,7 @@ int main()
 			DisplayPath(board, path, currentCellToDisplay);
 			isPathfindingDone = false;
 			isFullyDisplayed = false;
-			board->clearGraph();
+			board->ClearGraph();
 			SetupProject(board, gameScene);
 		});
 
@@ -219,12 +218,12 @@ int main()
 							{
 								if (portal->entry->position == portals.x)
 								{
-									board->removeEdge(portal->entry, portal->exit);
+									board->RemoveEdge(portal->entry, portal->exit);
 									break;
 								}
 								else if (portal->exit->position == portals.x)
 								{
-									board->removeEdge(portal->exit, portal->entry);
+									board->RemoveEdge(portal->exit, portal->entry);
 									break;
 								}
 							}
@@ -241,12 +240,12 @@ int main()
 						{
 							if (portal->entry->position == cellPosition)
 							{
-								board->removeEdge(portal->entry, portal->exit);
+								board->RemoveEdge(portal->entry, portal->exit);
 								break;
 							}
 							else if (portal->exit->position == cellPosition)
 							{
-								board->removeEdge(portal->exit, portal->entry);
+								board->RemoveEdge(portal->exit, portal->entry);
 								break;
 							}
 

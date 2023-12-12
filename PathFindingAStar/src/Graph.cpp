@@ -1,39 +1,47 @@
 #include "Graph.h"
 
 
-void Graph::addNode(Node* node) {
-	nodes[node->id] = node;
+void Graph::AddNode(Node* node) {
+	_nodes[node->id] = node;
 }
 
-void Graph::addEdge(Node* from, Node* to, double cost) {
-	edges[from->id][to->id] = cost;
+void Graph::AddEdge(Node* from, Node* to, double cost) {
+	_edges[from->id][to->id] = cost;
 }
 
-void Graph::removeEdge(Node* from, Node* to)
+void Graph::RemoveEdge(Node* from, Node* to)
 {
-	edges[from->id].erase(to->id);
+	_edges[from->id].erase(to->id);
 }
 
-void Graph::clearGraph()
+void Graph::ClearGraph()
 {
-	nodes.clear();
-	edges.clear();
+	_nodes.clear();
+	_edges.clear();
+}
+Graph::~Graph()
+{
+	for (auto node : _nodes)
+	{
+		delete node.second;
+	}
 }
 
-std::vector<Node*> Graph::getNeighbors(Node* node) {
+
+std::vector<Node*> Graph::GetNeighbors(Node* node) {
 	std::vector<Node*> neighbors;
 
-	if (edges.find(node->id) != edges.end()) {
-		for (const auto& neighbor : edges[node->id]) {
-			neighbors.push_back(nodes[neighbor.first]);
+	if (_edges.find(node->id) != _edges.end()) {
+		for (const auto& neighbor : _edges[node->id]) {
+			neighbors.push_back(_nodes[neighbor.first]);
 		}
 	}
 	return neighbors;
 }
 
-double Graph::getEdgeCost(Node* from, Node* to) {
-	if (edges.find(from->id) != edges.end() && edges[from->id].find(to->id) != edges[from->id].end()) {
-		return edges[from->id][to->id];
+double Graph::GetEdgeCost(Node* from, Node* to) {
+	if (_edges.find(from->id) != _edges.end() && _edges[from->id].find(to->id) != _edges[from->id].end()) {
+		return _edges[from->id][to->id];
 	}
 	return std::numeric_limits<double>::infinity();
 }
