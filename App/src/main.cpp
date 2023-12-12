@@ -21,6 +21,7 @@
 
 #include <filesystem>
 
+#include "AStarBoardEditor.h"
 #include "Sprite.h"
 
 
@@ -64,9 +65,10 @@ bool DisplayPath(AStarBoard* board, std::vector<Node*> path, int cellToDisplay)
 
 int main()
 {
+	
 	sf::RenderWindow window(sf::VideoMode(1920 / 2, 1080 / 2), "PathFinding");
 	window.setFramerateLimit(60);
-
+	InputSystem* inputSystem = new InputSystem(&window);
 	//Ressources
 	sf::Font* font = new sf::Font();
 	if (!font->loadFromFile("../../Assets/gamefont.ttf"))
@@ -124,7 +126,7 @@ int main()
 
 	SetupProject(board, gameScene);
 
-	InputSystem* inputSystem = new InputSystem(&window);
+	
 	inputSystem->Attach("LeftClick", menuButton);
 	inputSystem->Attach("LeftClick", startButton);
 	inputSystem->Attach("LeftClick", nextButton);

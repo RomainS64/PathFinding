@@ -5,10 +5,12 @@ set (SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/src)
 
 set (HEADERS
     ${HEADER_DIR}/AStarBoard.h
+    ${HEADER_DIR}/AStarBoardEditor.h
 )
 
 set (SOURCES
     ${SOURCE_DIR}/AStarBoard.cpp
+    ${SOURCE_DIR}/AStarBoardEditor.cpp
 )
 
 add_library(${PROJECT_NAME}
