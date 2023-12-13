@@ -170,6 +170,7 @@ int main()
 		});
 	restartButton->Subscribe([&]()
 		{
+			portals = sf::Vector2<sf::Vector2i>(sf::Vector2i(-1, -1), sf::Vector2i(-1, -1));
 			currentCellToDisplay = 0;
 			DisplayPath(board, path, currentCellToDisplay);
 			isPathfindingDone = false;
