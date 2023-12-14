@@ -27,10 +27,6 @@
 
 int main()
 {
-	
-	sf::RenderWindow window(sf::VideoMode(1920 / 2, 1080 / 2), "PathFinding");
-	window.setFramerateLimit(60);
-	InputSystem* inputSystem = new InputSystem(&window);
 	//Ressources
 	sf::Font* font = new sf::Font();
 	if (!font->loadFromFile("../../Assets/gamefont.ttf"))
@@ -42,8 +38,13 @@ int main()
 	{
 		std::cout << "Unable to load texture.";
 	}
+	//Window
+	sf::RenderWindow window(sf::VideoMode(1920 / 2, 1080 / 2), "PathFinding");
+	window.setFramerateLimit(60);
+	//Input
+	InputSystem* inputSystem = new InputSystem(&window);
 
-	// Button stuff
+	//Menu Scene
 	Sprite* title = new Sprite(&window, debugTexture, sf::Vector2f(0.2, 0.1), sf::Vector2f(0.6, 0.6));
 	Button* menuButton = new Button(&window, sf::Vector2f(0.4, 0.4), sf::Vector2f(0.2f, 0.07f), sf::Text("Start Game", *font), sf::Color(100, 100, 100), sf::Color::White);
 	std::list<SceneObject*> menuObjects;
@@ -51,7 +52,8 @@ int main()
 	menuObjects.push_back(title);
 	Scene* menuScene = new Scene(&window, menuObjects);
 	Scene* currentScene = menuScene;
-	
+	inputSystem->Attach("LeftClick",menuButton);
+
 	AStarBoard* board = new AStarBoard(&window, sf::Vector2f(0.15f, 0.1f), sf::Vector2i(16, 9), 0.7f);
 	AStarBoardEditor* editor = new AStarBoardEditor(&window,inputSystem,board,font);
 	std::list<SceneObject*> sceneObjects;
@@ -61,7 +63,6 @@ int main()
 	sceneObjects.push_back(board);
 	Scene* gameScene = new Scene(&window, sceneObjects);
 	
-	inputSystem->Attach("LeftClick",menuButton);
 	bool isInGameScene = false;
 	menuButton->Subscribe([&currentScene, gameScene,&isInGameScene]()
 	{
@@ -71,6 +72,9 @@ int main()
 		currentScene = gameScene;
 	});
 	
+	
+
+	
 	while (window.isOpen())
 	{
 		
@@ -78,6 +82,9 @@ int main()
 		currentScene->Draw();
 		inputSystem->Update();
 	}
+
+
+	
 	delete menuScene;
 	delete gameScene;
 	delete inputSystem;
