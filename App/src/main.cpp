@@ -25,44 +25,6 @@
 #include "Sprite.h"
 
 
-void SetupProject(AStarBoard* board, Scene* scene)
-{
-	scene->Start();
-}
-std::vector<Node*> CalculatePath(AStarBoard* board)
-{
-	AStar* astar = new AStar(*board);
-	Node* aStarStart = board->startNode;
-	std::vector<Node*> path;
-	board->ValidateCells();
-	for (auto checkpoint : board->checkpoints)
-	{
-		std::vector<Node*> findedPath = astar->findPath(aStarStart, checkpoint);
-		if (findedPath.empty())return {};
-		path.insert(path.end(), findedPath.begin(), findedPath.end());
-		aStarStart = checkpoint;
-	}
-	std::vector<Node*> findedPath = astar->findPath(aStarStart, board->endNode);
-	path.insert(path.end(), findedPath.begin(), findedPath.end());
-	delete astar;
-	return path;
-}
-
-bool DisplayPath(AStarBoard* board, std::vector<Node*> path, int cellToDisplay)
-{
-	if (cellToDisplay < path.size())
-	{
-		int i = 0;
-		for (auto node : path)
-		{
-			CellType type = i <= cellToDisplay ? Path : Empty;
-			board->SetCellType(node, type, false);
-			i++;
-		}
-	}
-	return cellToDisplay == path.size() - 1;
-}
-
 int main()
 {
 	
@@ -89,186 +51,32 @@ int main()
 	menuObjects.push_back(title);
 	Scene* menuScene = new Scene(&window, menuObjects);
 	Scene* currentScene = menuScene;
-
-	Button* startButton = new Button(&window, sf::Vector2f(0, 0), sf::Vector2f(0.2f, 0.07f), sf::Text("Find path", *font), sf::Color::Green, sf::Color::Black);
-	Button* nextButton = new Button(&window, sf::Vector2f(0.5f, 0), sf::Vector2f(0.2f, 0.07f), sf::Text("Next step", *font), sf::Color::Blue, sf::Color::Black);
-	Button* previousButton = new Button(&window, sf::Vector2f(0.25f, 0), sf::Vector2f(0.2f, 0.07f), sf::Text("Previous step", *font), sf::Color::Blue, sf::Color::Black);
-	Button* restartButton = new Button(&window, sf::Vector2f(0.75f, 0), sf::Vector2f(0.2f, 0.07f), sf::Text("Restart game", *font), sf::Color::Red, sf::Color::Black);
-	Button* wallButton = new Button(&window, sf::Vector2f(0.f, 0.1f), sf::Vector2f(0.1f, 0.06f), sf::Text("Wall", *font), sf::Color::White, sf::Color::Black);
-	Button* portalButton = new Button(&window, sf::Vector2f(0.f, 0.18f), sf::Vector2f(0.1f, 0.06f), sf::Text("Portal", *font), sf::Color::Green, sf::Color::Black);
-	Button* checkpointButton = new Button(&window, sf::Vector2f(0.f, 0.26f), sf::Vector2f(0.1f, 0.06f), sf::Text("Checkpoint", *font), sf::Color(255, 128, 0), sf::Color::Black);
-	Button* startCellButton = new Button(&window, sf::Vector2f(0.f, 0.34f), sf::Vector2f(0.1f, 0.06f), sf::Text("Start", *font), sf::Color::Blue, sf::Color::Black);
-	Button* endCellButton = new Button(&window, sf::Vector2f(0.f, 0.42f), sf::Vector2f(0.1f, 0.06f), sf::Text("End", *font), sf::Color::Red, sf::Color::Black);
-	Button* emptyButton = new Button(&window, sf::Vector2f(0.9f, 0.1f), sf::Vector2f(0.1f, 0.06f), sf::Text("Empty", *font), sf::Color(100, 100, 100), sf::Color::Black);
-
+	
 	AStarBoard* board = new AStarBoard(&window, sf::Vector2f(0.15f, 0.1f), sf::Vector2i(16, 9), 0.7f);
+	AStarBoardEditor* editor = new AStarBoardEditor(&window,inputSystem,board,font);
 	std::list<SceneObject*> sceneObjects;
-
-	sceneObjects.push_back(startButton);
-	sceneObjects.push_back(nextButton);
-	sceneObjects.push_back(previousButton);
-	sceneObjects.push_back(restartButton);
-	sceneObjects.push_back(wallButton);
-	sceneObjects.push_back(portalButton);
-	sceneObjects.push_back(checkpointButton);
-	sceneObjects.push_back(startCellButton);
-	sceneObjects.push_back(endCellButton);
-	sceneObjects.push_back(emptyButton);
+	
+	
+	sceneObjects.push_back(editor);
 	sceneObjects.push_back(board);
 	Scene* gameScene = new Scene(&window, sceneObjects);
-
-	int currentCellToDisplay = 0;
-	std::vector<Node*> path;
-	bool isPathfindingDone = false;
-	bool isFullyDisplayed = false;
-	CellType currentCellType = Empty;
-	sf::Vector2<sf::Vector2i> portals = sf::Vector2<sf::Vector2i>(sf::Vector2i(-1, -1), sf::Vector2i(-1, -1));
-
-	SetupProject(board, gameScene);
-
 	
-	inputSystem->Attach("LeftClick", menuButton);
-	inputSystem->Attach("LeftClick", startButton);
-	inputSystem->Attach("LeftClick", nextButton);
-	inputSystem->Attach("LeftClick", previousButton);
-	inputSystem->Attach("LeftClick", restartButton);
-	inputSystem->Attach("LeftClick", wallButton);
-	inputSystem->Attach("LeftClick", portalButton);
-	inputSystem->Attach("LeftClick", checkpointButton);
-	inputSystem->Attach("LeftClick", startCellButton);
-	inputSystem->Attach("LeftClick", endCellButton);
-	inputSystem->Attach("LeftClick", emptyButton);
-	inputSystem->Attach("LeftClick", board);
-	menuButton->Subscribe([&currentScene, gameScene]()
-		{
-			currentScene = gameScene;
-		});
-	startButton->Subscribe([&isPathfindingDone, &board, &path]()
-		{
-			if (!isPathfindingDone && board->startNode && board->endNode)
-			{
-				path = CalculatePath(board);
-				isPathfindingDone = !path.empty();
-
-			}
-		});
-	previousButton->Subscribe([&isPathfindingDone, &board, &path, &isFullyDisplayed, &currentCellToDisplay]()
-		{
-			if (isPathfindingDone && currentCellToDisplay > 0)
-			{
-				currentCellToDisplay--;
-				isFullyDisplayed = DisplayPath(board, path, currentCellToDisplay);
-			}
-		});
-	nextButton->Subscribe([&isPathfindingDone, &board, &path, &isFullyDisplayed, &currentCellToDisplay]()
-		{
-			if (isPathfindingDone && !isFullyDisplayed)
-			{
-				isFullyDisplayed = DisplayPath(board, path, currentCellToDisplay);
-				currentCellToDisplay++;
-			}
-		});
-	restartButton->Subscribe([&]()
-		{
-			portals = sf::Vector2<sf::Vector2i>(sf::Vector2i(-1, -1), sf::Vector2i(-1, -1));
-			currentCellToDisplay = 0;
-			DisplayPath(board, path, currentCellToDisplay);
-			isPathfindingDone = false;
-			isFullyDisplayed = false;
-			board->ClearGraph();
-			SetupProject(board, gameScene);
-		});
-
-	wallButton->Subscribe([&currentCellType]() { currentCellType = Wall; });
-	portalButton->Subscribe([&currentCellType]() { currentCellType = Portal; });
-	checkpointButton->Subscribe([&currentCellType]() { currentCellType = Checkpoint; });
-	startCellButton->Subscribe([&currentCellType]() { currentCellType = Start; });
-	endCellButton->Subscribe([&currentCellType]() { currentCellType = End; });
-	emptyButton->Subscribe([&currentCellType]() { currentCellType = Empty; });
-
-	board->Subscribe([&board, &window, &currentCellType, &portals]()
-		{
-			sf::Vector2i mousePosition = sf::Mouse::getPosition(*&window) - board->GetBoardPosition();
-			for (const auto& cell : board->GetCellsMap())
-			{
-				if (cell.second->square->Contains(mousePosition))
-				{
-					sf::Vector2i cellPosition = cell.first->position;
-
-					if (currentCellType == Start || currentCellType == End)
-					{
-						for (const auto& cell : board->GetCellsMap())
-							if (cell.second->cellType == currentCellType)
-							{
-								board->SetCellType(cell.first, Empty);
-								break;
-							}
-					}
-					else if (currentCellType == Portal)
-					{
-						if (portals.x == sf::Vector2i(-1, -1))
-						{
-							portals.x = cellPosition;
-						}
-						else if (portals.y == sf::Vector2i(-1, -1))
-						{
-							portals.y = cellPosition;
-							board->CreatePortal(portals.x, portals.y);
-						}
-						else
-						{
-							for (auto portal : board->GetPortals())
-							{
-								if (portal->entry->position == portals.x)
-								{
-									board->RemoveEdge(portal->entry, portal->exit);
-									break;
-								}
-								else if (portal->exit->position == portals.x)
-								{
-									board->RemoveEdge(portal->exit, portal->entry);
-									break;
-								}
-							}
-							board->SetCellType(portals.x, Empty);
-							board->SetCellType(portals.y, Empty);
-							portals.x = cellPosition;
-							portals.y = sf::Vector2i(-1, -1);
-						}
-					}
-					else if (currentCellType == Empty && cell.second->cellType == Portal)
-					{
-						// Remove portal from portal list
-						for (auto portal : board->GetPortals())
-						{
-							if (portal->entry->position == cellPosition)
-							{
-								board->RemoveEdge(portal->entry, portal->exit);
-								break;
-							}
-							else if (portal->exit->position == cellPosition)
-							{
-								board->RemoveEdge(portal->exit, portal->entry);
-								break;
-							}
-
-						}
-						board->SetCellType(portals.x, Empty);
-						board->SetCellType(portals.y, Empty);
-						portals.x = sf::Vector2i(-1, -1);
-						portals.y = sf::Vector2i(-1, -1);
-					}
-
-					board->SetCellType(cellPosition, currentCellType);
-				}
-			}
-		});
-
+	inputSystem->Attach("LeftClick",menuButton);
+	bool isInGameScene = false;
+	menuButton->Subscribe([&currentScene, gameScene,&isInGameScene]()
+	{
+		if(isInGameScene)return;
+		isInGameScene = true;
+		gameScene->Start();
+		currentScene = gameScene;
+	});
+	
 	while (window.isOpen())
 	{
-		inputSystem->Update();
+		
 		currentScene->Update();
 		currentScene->Draw();
+		inputSystem->Update();
 	}
 	delete menuScene;
 	delete gameScene;

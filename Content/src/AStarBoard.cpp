@@ -73,6 +73,7 @@ void AStarBoard::ClearGraph()
 	{
 		SetCellType(cell.first->position, Empty);
 	}
+	checkpoints.clear();
 	_portals.clear();
 	startNode = nullptr;
 	endNode = nullptr;
